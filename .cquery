@@ -1,0 +1,8 @@
+%c -std=gnu11
+%cpp -std=gnu++14
+
+-Wall
+-Wextra
+
+-Ilibopencm3/include
+-DSTM32F4
