@@ -17,20 +17,22 @@ CFlags += \
 	-ffunction-sections \
 	-fdata-sections \
 	-fno-common \
-	-fno-exceptions \
-	--static
+	-fno-exceptions
 
 LFlags += \
 	-Wl,--gc-sections \
+	--static \
 	-nostartfiles \
-	-lm \
-	-lstdc++_nano \
-	-lc \
-	-lg \
-	-lrdimon
+	-Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group
+
+	# -lm \
+	# -lstdc++_nano \
+	# -lc \
+	# -lg \
+	# -lrdimon
 
 
-# MCU specific flags (stm32f401re)
+# MCU specific flags (stm32l476rg)
 LINKER_SCRIPTS_DIR = $(Makefile_path)/../linker_scripts
 
 CFlags += \
@@ -39,19 +41,19 @@ CFlags += \
 	-mfloat-abi=hard -mfpu=fpv4-sp-d16
 
 LFlags += \
-	-T $(LINKER_SCRIPTS_DIR)/stm32f401.ld
+	-T $(LINKER_SCRIPTS_DIR)/stm32l476.ld
 
 
 # Use LibOpenCm3
 LIBOPENCM3_DIR = $(Makefile_path)/../libopencm3
-CFlags += -I $(LIBOPENCM3_DIR)/include -DSTM32F4
-LFlags += -L $(LIBOPENCM3_DIR)/lib -lopencm3_stm32f4
+CFlags += -I $(LIBOPENCM3_DIR)/include -DSTM32L4
+LFlags += -L $(LIBOPENCM3_DIR)/lib -lopencm3_stm32l4
 
 libopencm3:
 	$(MAKE) -C $(LIBOPENCM3_DIR) -j
 
 # Openocd configuration
-OPENOCD_CFG = /usr/share/openocd/scripts/board/st_nucleo_f4.cfg
+OPENOCD_CFG = /usr/share/openocd/scripts/board/st_nucleo_l4.cfg
 
 
 
@@ -65,8 +67,11 @@ all: test.hex
 	$(Toolchain)gcc $(CFlags) $< -o $@ -c
 
 
-test.elf: main.c.o
-	$(Toolchain)gcc $^ $(LFlags) -o $@
+test.elf: main.c.o i2c.c.o usart_usb.c.o
+	$(Toolchain)gcc $(CFlags) $^ $(LFlags) -o $@
+
+uart.elf: main_usart_usb_shell.c.o
+	$(Toolchain)gcc $(CFlags) $^ $(LFlags) -o $@
 
 
 %.hex: %.elf

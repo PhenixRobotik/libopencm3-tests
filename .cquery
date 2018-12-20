@@ -5,4 +5,4 @@
 -Wextra
 
 -Ilibopencm3/include
--DSTM32F4
+-DSTM32L4
