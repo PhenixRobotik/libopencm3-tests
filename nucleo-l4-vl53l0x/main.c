@@ -22,6 +22,8 @@ int main(void)
 	usart_usb_backspace();
 	usart_usb_send_line("", 0);
 
+	i2c_setup();
+	i2c_test();
 
 
 
