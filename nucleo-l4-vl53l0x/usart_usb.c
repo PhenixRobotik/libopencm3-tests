@@ -46,3 +46,9 @@ void usart_usb_send_line(char* line, uint32_t len) {
 	usart_send_blocking(USART2, '\r');
 	usart_send_blocking(USART2, '\n');
 }
+
+void usart_usb_backspace() {
+	usart_send_blocking(USART2, '\010');
+	usart_send_blocking(USART2, ' ');
+	usart_send_blocking(USART2, '\010');
+}
