@@ -7,6 +7,8 @@
 
 #include "usart_usb.h"
 
+#include "HAL/main_i2c.h"
+
 void i2c_setup() {
 	// TODO interrupt on gpio useful ?
 	// gpio_mode_setup(GPIOA,
